@@ -24,53 +24,86 @@
       <h1 class="text-2xl font-bold text-white tracking-tight italic">⚡ EV DIGITAL TWIN PRO</h1>
       <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em]">Full API Integration Dashboard</p>
     </div>
+    <div id="status" class="text-[10px] font-black px-4 py-1 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-full uppercase tracking-widest">
+      ● Unity Engine Connected
+    </div>
   </header>
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- LEFT PANEL -->
     <aside class="lg:col-span-4 space-y-4">
       <div class="glass-card p-5">
-        <h3 class="text-xs font-black text-slate-500 uppercase mb-4 tracking-widest">Drive Configuration</h3>
+        <h3 class="text-xs font-black text-slate-500 uppercase mb-4 tracking-widest">Drive Configuration (API Input)</h3>
 
         <div class="space-y-4">
-          <input id="speed" type="number" value="40">
-          <input id="drivingHours" type="number" value="1.5">
-          <input id="loadWeight" type="number" value="150">
-          <input id="timeOfDay" type="range" min="0" max="24" value="12">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="input-group">
+              <label class="text-[9px] font-bold text-slate-500 block mb-1 uppercase">Speed (km/h)</label>
+              <input id="speed" type="number" value="40" class="bg-transparent text-white font-bold w-full outline-none text-lg">
+            </div>
+            <div class="input-group">
+              <label class="text-[9px] font-bold text-slate-500 block mb-1 uppercase">Drive Hours</label>
+              <input id="drivingHours" type="number" value="1.5" step="0.1" class="bg-transparent text-white font-bold w-full outline-none text-lg">
+            </div>
+          </div>
 
-          <select id="slope">
-            <option value="0">Flat</option>
-            <option value="1">Uphill</option>
-            <option value="2">Downhill</option>
-          </select>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="input-group">
+              <label class="text-[9px] font-bold text-slate-500 block mb-1 uppercase">Load (kg)</label>
+              <input id="loadWeight" type="number" value="150" class="bg-transparent text-white font-bold w-full outline-none text-lg">
+            </div>
+            <div class="input-group">
+              <label class="text-[9px] font-bold text-slate-500 block mb-1 uppercase">Time of Day (0-24)</label>
+              <input id="timeOfDay" type="range" min="0" max="24" value="12" class="w-full mt-2">
+            </div>
+          </div>
 
-          <select id="environment">
-            <option value="3">Normal</option>
-            <option value="0">Summer</option>
-            <option value="1">Winter</option>
-            <option value="2">Rain</option>
-          </select>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="input-group">
+              <label class="text-[9px] font-bold text-slate-500 block mb-1 uppercase">Slope</label>
+              <select id="slope" class="w-full bg-transparent text-xs font-bold">
+                <option value="0">Flat (0)</option>
+                <option value="1">Uphill (1)</option>
+                <option value="2">Downhill (2)</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="text-[9px] font-bold text-slate-500 block mb-1 uppercase">Env (Climate)</label>
+              <select id="environment" class="w-full bg-transparent text-xs font-bold">
+                <option value="3">Normal (3)</option>
+                <option value="0">Summer (0)</option>
+                <option value="1">Winter (1)</option>
+                <option value="2">Rain (2)</option>
+              </select>
+            </div>
+          </div>
 
-          <label><input id="vehicleOn" type="checkbox" checked> Vehicle</label>
-          <label><input id="isCharging" type="checkbox"> Charging</label>
+          <div class="flex justify-between items-center px-2 py-2 border-t border-white/5">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input id="vehicleOn" type="checkbox" checked class="accent-sky-500">
+              <span class="text-[10px] font-bold uppercase">Vehicle Power</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input id="isCharging" type="checkbox" class="accent-emerald-500">
+              <span class="text-[10px] font-bold uppercase">Charging Mode</span>
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- Battery + Temp -->
       <div class="grid grid-cols-2 gap-3">
         <div class="glass-card p-4 text-center">
-          <p>Battery SOC</p>
-          <div><span id="outSoc">--</span>%</div>
+          <p class="text-[9px] font-black text-slate-500 uppercase mb-1">Battery SOC</p>
+          <div class="text-2xl font-bold text-white"><span id="outSoc">--</span>%</div>
         </div>
         <div class="glass-card p-4 text-center">
-          <p>Temperature</p>
-          <div><span id="outTemp">--</span>°C</div>
+          <p class="text-[9px] font-black text-slate-500 uppercase mb-1">Temperature</p>
+          <div class="text-2xl font-bold text-rose-500"><span id="outTemp">--</span>°C</div>
         </div>
       </div>
 
-      <!-- 🔥 NEW BATTERY STATUS -->
-      <div class="glass-card p-4 text-center">
+      <!-- 🔥 BATTERY STATUS ADDED -->
+      <div class="glass-card p-4 text-center mt-3">
         <p class="text-[9px] font-black text-slate-500 uppercase mb-1">Battery Status</p>
         <div id="batteryStatus" class="text-lg font-bold text-green-400">
           NORMAL
@@ -79,25 +112,24 @@
 
     </aside>
 
-    <!-- RIGHT PANEL -->
     <main class="lg:col-span-8 space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <!-- Chart -->
-        <div class="glass-card p-6">
-          <h3>Capacity vs Range</h3>
+        <div class="glass-card p-6 h-[480px] flex flex-col shadow-2xl">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Capacity vs Range</h3>
           <canvas id="rangeChart"></canvas>
 
-          <!-- 🔥 FINAL RANGE -->
           <div class="mt-4 text-center">
-            <p>Final Range</p>
-            <div><span id="outFinalRange">--</span> km</div>
+            <p class="text-[10px] text-slate-500 uppercase">Final Range</p>
+            <div class="text-xl font-bold text-green-400">
+              <span id="outFinalRange">--</span> km
+            </div>
           </div>
+
         </div>
 
-        <!-- Drain -->
-        <div class="glass-card p-6">
-          <h3>Drain</h3>
+        <div class="glass-card p-6 h-[480px] flex flex-col shadow-2xl">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Drain Analytics</h3>
           <canvas id="drainChart"></canvas>
         </div>
 
@@ -112,29 +144,29 @@ let history = { labels: [], soc: [], range: [], drain: [] };
 
 const rangeChart = new Chart(document.getElementById('rangeChart'), {
   type: 'line',
-  data: { labels: history.labels, datasets: [{ data: history.soc }, { data: history.range }] }
+  data: { labels: history.labels, datasets: [{ label: 'SOC', data: history.soc }, { label: 'Range', data: history.range }] },
+  options: { responsive: true }
 });
 
 const drainChart = new Chart(document.getElementById('drainChart'), {
   type: 'line',
-  data: { labels: history.labels, datasets: [{ data: history.drain }] }
+  data: { labels: history.labels, datasets: [{ label: 'Drain', data: history.drain }] },
+  options: { responsive: true }
 });
 
 function updateDashboard() {
   fetch("/output")
     .then(res => res.json())
     .then(d => {
-
       if (!d.batteryCapacity && d.batteryCapacity !== 0) return;
 
       document.getElementById("outSoc").innerText = d.batteryCapacity.toFixed(1);
       document.getElementById("outTemp").innerText = d.currentTemp.toFixed(1);
 
-      // 🔥 Final Range
       if (d.finalRange !== undefined)
         document.getElementById("outFinalRange").innerText = d.finalRange.toFixed(1);
 
-      // 🔥 Battery Status Logic
+      // 🔥 BATTERY STATUS LOGIC
       let status = "NORMAL";
       let color = "#22c55e";
 
@@ -149,9 +181,11 @@ function updateDashboard() {
         color = "#eab308";
       }
 
-      const el = document.getElementById("batteryStatus");
-      el.innerText = status;
-      el.style.color = color;
+      const statusEl = document.getElementById("batteryStatus");
+      if (statusEl) {
+        statusEl.innerText = status;
+        statusEl.style.color = color;
+      }
 
       let t = new Date().toLocaleTimeString();
       history.labels.push(t);
